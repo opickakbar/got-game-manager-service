@@ -36,7 +36,7 @@ class GameControllerTest {
         when(gameManagerService.startGame()).thenReturn("Game Started with number: 42");
 
         // when calling the API
-        mockMvc.perform(post("/game/start")
+        mockMvc.perform(post("/games/start")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Game Started with number: 42"));
@@ -51,7 +51,7 @@ class GameControllerTest {
         when(gameManagerService.resultGame()).thenReturn("Winner is Player1");
 
         // when calling the API
-        mockMvc.perform(get("/game/result")
+        mockMvc.perform(get("/games/result")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Winner is Player1"));
@@ -66,7 +66,7 @@ class GameControllerTest {
         when(gameManagerService.resultGame()).thenReturn("Game is not finished yet!");
 
         // when calling the API
-        mockMvc.perform(get("/game/result")
+        mockMvc.perform(get("/games/result")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Game is not finished yet!"));
