@@ -82,6 +82,8 @@ Expected output:
 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 ```
-
 ---
+
+Please check [here](./GAME_DETAILS.md) to see game details,
+
 Made with ❤️ by Muhammad Taufik Akbar
