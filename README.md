@@ -1,16 +1,25 @@
 # GameManagerService
 
 ## Overview
-The **GameManagerService** is responsible for managing the game flow, starting the game, and retrieving the results. It acts as the central controller that initiates the gameplay and determines the winner.
+The **GameManagerService** manages the overall game flow, starting the game and retrieving results. It acts as the main orchestrator, ensuring players take turns and determining the winner.
 
 ## Features
-- **Starts the game** by generating a random initial number and sending it to Player 1.
-- **Retrieves the winner** from Redis when the game ends.
-- **Uses RabbitMQ** for event-driven communication between players.
+- **Game Initialization**: Starts the game by generating a random number and sending it to Player 1.
+- **Winner Retrieval**: Fetches the game result from **Redis** once a player wins.
+- **RabbitMQ Integration**: Uses event-driven messaging to manage game moves.
+
+## Technologies Used
+- **Java 21**
+- **Spring Boot** (REST API, Dependency Injection)
+- **Spring AMQP (RabbitMQ)** (Message Queue for Communication)
+- **Redis** (Storing Game State & Winner Information)
+- **JUnit & Mockito** (Unit Testing)
 
 ## Project Structure
 ```
 GameManagerService
+├── config
+│   ├── RabbitConfig.java
 ├── controller
 │   ├── GameController.java
 ├── service
@@ -20,17 +29,28 @@ GameManagerService
 │   ├── GameMoveEventDto.java
 ├── util
 │   ├── Utils.java
-├── config
-│   ├── RabbitConfig.java
 ```
 
-## API Endpoints
+## Running the Service
+Ensure **RabbitMQ** and **Redis** are running before starting the service.
 
+### Steps to Run:
+1. **Start RabbitMQ & Redis**
+   ```sh
+   docker-compose up --build
+   ```
+2. **Run GameManagerService**
+   ```sh
+   mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8091"
+   ```
+
+## API Endpoints
 ### 1. Start Game
-**Endpoint:** `POST /games/start`  
+**Endpoint:** `POST /games/start`
+
 **Description:**
-- Initializes the game with a random number between 10 and 100.
-- Sends the first move event to Player 1 via RabbitMQ.
+- Generates a random number between **10 and 100**.
+- Sends the first move event to **Player 1** via RabbitMQ.
 
 **Response Example:**
 ```json
@@ -38,7 +58,8 @@ GameManagerService
 ```
 
 ### 2. Get Game Result
-**Endpoint:** `GET /games/result`  
+**Endpoint:** `GET /games/result`
+
 **Description:**
 - Retrieves the winner from Redis if the game has ended.
 
@@ -51,47 +72,16 @@ GameManagerService
 "Game is not finished yet!"
 ```
 
-## Technologies Used
-- **Spring Boot** (REST API, Dependency Injection)
-- **Spring AMQP** (RabbitMQ for event-based communication)
-- **Redis** (Caching game state and storing the winner)
-- **JUnit & Mockito** (Unit Testing)
-
-## How It Works
-1. **Players register** in their respective services.
-2. **GameManagerService starts the game** and sends the first number to Player 1.
-3. **Players take turns processing moves** and sending them to each other via RabbitMQ.
-4. **When a player reaches 1**, the game stores the winner in Redis.
-5. **GameManagerService fetches the result** when requested.
-
-## Running the Service
-Ensure you have **RabbitMQ** and **Redis** running before starting the service.
-
-### Steps to Run This Game:
-1. **Start RabbitMQ** and **Redis**.
-   ```sh
-   docker-compose up --build
-   ```
-2. **Run the GameManagerService:**
-   ```sh
-   mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8091"
-   ```
-3. **Start the [Player Service](https://github.com/opickakbar/got-player-service)**:
-
-   **Running Player 1:**
-   ```sh
-   cd /got-player-service
-   mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
-   ```
-   **Running Player 2:**
-   ```sh
-   cd /got-player-service
-   mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8082"
-   ```
-
-4. Use **API calls** to start and check game results.
+## Running Tests
+To execute unit tests:
+```sh
+mvn test
+```
+Expected output:
+```
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
 
 ---
-
-Made with ❤️ Muhammad Taufik Akbar
-
+Made with ❤️ by Muhammad Taufik Akbar
